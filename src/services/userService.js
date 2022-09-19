@@ -3,11 +3,12 @@ const User = require("../models/User");
 module.exports = {
   index() {
     return User.findAll({ 
-      attributes: ["id", "name", "email"],
+      attributes: ["id", "name", "email", "created_at"],
       where: {
         deleted_at: null
       },
-      paranoid: false
+      paranoid: false,
+      order: [['id', 'DESC']]
    });
   },
 
@@ -22,7 +23,9 @@ module.exports = {
       throw new Error("The user already exists");
     }
 
-    return User.create(data);
+    await User.create(data);
+
+    return true;
   },
 
   async show(id) {
